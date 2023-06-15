@@ -1,95 +1,136 @@
-import Image from 'next/image'
-import styles from './page.module.css'
+// import Image from 'next/image'
+// import styles from './page.module.css'
+import React, { useState, useEffect } from 'react'
+import {Thumbs, Viewer} from '../components'
+import { image1, image2, image3, image4 } from '../assets/images'
+import 'h8k-components'
+
+const title:string = 'Catalog Viewer'
 
 export default function Home() {
+  const catalogsList = [
+    {
+      thumb: image1,
+      image: image1
+    },
+    {
+      thumb: image2,
+      image: image2
+    },
+    {
+      thumb: image3,
+      image: image3
+    },
+    {
+      thumb: image4,
+      image: image4
+    }
+  ]
+
+  const [ catalogs, setCatalogs ] = useState([...catalogsList])
+  const [ activeIndex, setActiveIndex ] = useState(0)
+  const [ isSliding, setIsSliding ] = useState(false)
+  const [ slideTimer, setSlideTimer ] = useState(null)
+  const [ slideDuration ] = useState(1000)
+  const [ isCheck, setIsCheck ] = useState(false)
+
+
+  const thumbClickHandler = (idx:number)=>{
+    setActiveIndex(idx)
+  }
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>)=>{
+    setIsCheck(e.target.checked)
+  }
+
+  const forwardBtnHandler = ()=>{
+    const nextIndex = (activeIndex+1)%catalogs.length
+    setActiveIndex(nextIndex)
+  }
+
+  const backwardBtnHandler = ()=>{
+    const prevIndex = (activeIndex-1+catalogs.length)%catalogs.length
+    setActiveIndex(prevIndex)
+  }
+
+
+  useEffect(()=>{
+
+    let interval:null = null
+    if(isCheck){
+      setInterval(()=>{
+        const nextIndex = (activeIndex+1)%catalogs.length
+    setActiveIndex(nextIndex)
+      }, slideDuration)
+    }
+
+    return()=>{
+      if(interval){
+        clearInterval(interval)
+      }
+    }
+
+
+  },[activeIndex ,isCheck])
+
+
+
+  // useEffect(()=>{
+  //   let interval = null
+  //   if (isCheck) {
+  //     interval = setInterval(() => {
+  //       setActiveIndex((prevIndex)=> (prevIndex+1)% catalogs.length)
+  //     }, slideDuration);
+  //   }
+  //   return()=>{
+  //     clearInterval(interval)
+  //   }
+
+  // },[isCheck])
+
+
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+   <>
+
+{/* <h8k-navbar header={ title }> */}
+      <div className='layout-column justify-content-center mt-75'>
+        <div className='layout-row justify-content-center'>
+          <div className='card pt-25'>
+            <Viewer catalogImage={ catalogs[activeIndex].image.src } />
+            <div className='layout-row justify-content-center align-items-center mt-20'>
+            <button 
+              className="icon-only outlined"
+              data-testid="prev-slide-btn"
+              onClick={backwardBtnHandler}
+            >
+              <i className="material-icons">arrow_back</i>
+            </button>
+              <Thumbs 
+                items={ catalogs } 
+                currentIndex={ activeIndex } 
+                handleClick={thumbClickHandler}
+              />
+            <button 
+              className="icon-only outlined"
+              data-testid="next-slide-btn"
+              onClick={forwardBtnHandler}
+            >
+              <i className="material-icons">arrow_forward</i>
+            </button>
+            </div>
+          </div>
+        </div>
+        <div className='layout-row justify-content-center mt-25'>
+          <input 
+            type='checkbox'
+            data-testid='toggle-slide-show-button'
+            checked={isCheck}
+            onChange={handleChange}
+          /> 
+          <label className='ml-6'>Start Slide Show</label>
         </div>
       </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore the Next.js 13 playground.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
+      {/* </h8k-navbar> */}
+   </>
   )
 }
