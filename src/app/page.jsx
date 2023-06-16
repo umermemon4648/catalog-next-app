@@ -1,11 +1,12 @@
 // import Image from 'next/image'
-// import styles from './page.module.css'
+"use client" 
 import React, { useState, useEffect } from 'react'
 import {Thumbs, Viewer} from '../components'
 import { image1, image2, image3, image4 } from '../assets/images'
 import 'h8k-components'
 
-const title:string = 'Catalog Viewer'
+// const title:string = 'Catalog Viewer'
+const title = 'Catalog Viewer'
 
 export default function Home() {
   const catalogsList = [
@@ -35,11 +36,11 @@ export default function Home() {
   const [ isCheck, setIsCheck ] = useState(false)
 
 
-  const thumbClickHandler = (idx:number)=>{
+  const thumbClickHandler = (idx)=>{
     setActiveIndex(idx)
   }
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>)=>{
+  const handleChange = (e)=>{
     setIsCheck(e.target.checked)
   }
 
@@ -56,9 +57,9 @@ export default function Home() {
 
   useEffect(()=>{
 
-    let interval:null = null
+    let interval= null
     if(isCheck){
-      setInterval(()=>{
+      interval = setInterval(()=>{
         const nextIndex = (activeIndex+1)%catalogs.length
     setActiveIndex(nextIndex)
       }, slideDuration)
@@ -92,7 +93,7 @@ export default function Home() {
   return (
    <>
 
-{/* <h8k-navbar header={ title }> */}
+<h8k-navbar header={ title }>
       <div className='layout-column justify-content-center mt-75'>
         <div className='layout-row justify-content-center'>
           <div className='card pt-25'>
@@ -130,7 +131,7 @@ export default function Home() {
           <label className='ml-6'>Start Slide Show</label>
         </div>
       </div>
-      {/* </h8k-navbar> */}
+      </h8k-navbar>
    </>
   )
 }
